@@ -21,3 +21,5 @@ MYMETA.json
 t/LWPCache/
 .build
 MooseX-Role-AttributeOverride-*
+Test-LWP-Recorder8
+Test-LWP-Recorder*
