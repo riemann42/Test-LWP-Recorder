@@ -29,4 +29,9 @@ verbose = 9
 [-CodeLayout::RequireUseUTF8] 
 [-Documentation::RequirePODUseEncodingUTF8] 
 
+[-Bangs::ProhibitFlagComments]
 
+# use base is great.
+[-Tics::ProhibitUseBase]
+
+[-ValuesAndExpressions::ProhibitFiletest_f] 

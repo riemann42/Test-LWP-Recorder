@@ -4,6 +4,7 @@ package Test::LWP::Recorder;
 
 use strict;
 use warnings;
+use 5.006;
 use Carp;
 
 use base qw(LWP::UserAgent);
@@ -12,6 +13,7 @@ use File::Slurp;
 use File::Spec;
 use List::Util qw(reduce);
 use HTTP::Status qw(:constants);
+use HTTP::Response;
 
 sub new {
     my $class    = shift;
@@ -36,9 +38,9 @@ sub _filter_param {
 sub _filter_all_params {
     my $self         = shift;
     my $param_string = shift;
-    my %query =
-        map { ( split qr{ = }xms )[ 0, 1 ] }
-        split qr{ \& }xms, $param_string;
+    ## no critic (BuiltinFunctions::ProhibitStringySplit)
+    my %query = map { ( split q{=} )[ 0, 1 ] } split q{\&}, $param_string;
+    ## use critic;
     return reduce { $a . $self->_filter_param( $b, $query{$b} ) }
     sort keys %query;
 }
@@ -201,15 +203,15 @@ Default is [qw(Client-Peer Expires Client-Date Cache-Control)];
 
 =method request
 
-This is overridden from L<LWP::UserAgent> so we can do our magic.
+This is overridden from L<LWP::UserAgent|LWP::UserAgent> so we can do our magic.
 
-=ACKNOWLEDGMENTS
+=head1 ACKNOWLEDGMENTS
 
-Thanks to motemen for L<LWPx::Record::DataSection> which I use to test this
+Thanks to motemen for L<LWPx::Record::DataSection|LWPx::Record::DataSection> which I use to test this
 module (and bundle in the inc/ directory).  It's a great module and a simple
 approach.
 
-=BUGS AND LIMITATIONS
+=head1 BUGS AND LIMITATIONS
 
 This works using a new UserAgent, which may not work for you.
 
@@ -217,18 +219,18 @@ Currently Cookies are ignored.
 
 The filename scheme is pretty lame.
 
+The test suite needs to be extended to include a POST example
+
 =diag Page requested that wasn't recorded 
 
 A page was requested while in playback mode that was not recorded in record
 mode. A 404 object will be returned.
 
-=SEE ALSO
+=head1 SEE ALSO
 LWP::UserAgent
 LWPx::Record::DataSection
 
-=for STOPWORDS
-motemen
-UserAgent
-LWP
+=for stopwords
+motemen UserAgent LWP GPL UA
 
 

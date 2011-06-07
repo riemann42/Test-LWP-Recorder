@@ -5,10 +5,10 @@ use Test::More tests => 6;                      # last test to print
 use Test::LWP::Recorder; 
 use lib qw(inc);
 use LWPx::Record::DataSection;
-
+mkdir 't/LWPtmp';
 my $ua = Test::LWP::Recorder->new({
     record => 1,
-    cache_dir => 'tmp', 
+    cache_dir => 't/LWPtmp', 
     filter_params => [qw(query)],
 });
 
@@ -25,10 +25,9 @@ ok($result->content =~ m{<b>Edward[ ]J\.[ ]Allen[ ]III</b>}xms,
 
 my $ua2 = Test::LWP::Recorder->new({
     record => 0,
-    cache_dir => 'tmp', 
+    cache_dir => 't/LWPtmp', 
     filter_params => [qw(query)],
 });
-
 
 $result = $ua2->get('http://search.cpan.org/search?query=LWALL&mode=author');
 
