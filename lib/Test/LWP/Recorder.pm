@@ -1,6 +1,6 @@
 package Test::LWP::Recorder;
 
-# ABSTRACT: Create an LWP UserAgent that records or playsback sessions
+# ABSTRACT: Create an LWP UserAgent that records and plays back sessions
 
 use strict;
 use warnings;
@@ -136,11 +136,15 @@ This module creates a LWP UserAgent that records interactions to a test
 drive.  Setting the "record" parameter to true will cause it to record,
 otherwise it plays back.  It is designed for use in test suites.
 
+In the case that a page is requested while in playback mode that was not
+recorded while in record mode, a 404 will be returned.
+
 There is another module that does basically the same thing called
 L<LWPx::Record::DataSection|LWPx::Record::DataSection>.  Please check this out
 before using this module.  It doesn't require a special UA, and stores the
 data in the DATA section of your file.  I use this module (a copy in inc/) for
 my test suite! 
+
 
 =head1 IMPORTANT NOTE
 
@@ -148,7 +152,8 @@ Please note that you should <b>always</b> put this in an inc directory in your
 module when using it as part of a test suite.  This is critical because the
 filenames in the cache may change as new features are added to the module.
 
-Feel free to just copy the module file over and include it in your inc.  If
+Feel free to just copy the module file over and include it in your inc
+(provided that your module uses Perl5, GPL, or Artistic license).  If
 you make any changes to it, please change the version number (the last
 number).
 
@@ -198,6 +203,12 @@ Default is [qw(Client-Peer Expires Client-Date Cache-Control)];
 
 This is overridden from L<LWP::UserAgent> so we can do our magic.
 
+=ACKNOWLEDGMENTS
+
+Thanks to motemen for L<LWPx::Record::DataSection> which I use to test this
+module (and bundle in the inc/ directory).  It's a great module and a simple
+approach.
+
 =BUGS AND LIMITATIONS
 
 This works using a new UserAgent, which may not work for you.
@@ -206,8 +217,18 @@ Currently Cookies are ignored.
 
 The filename scheme is pretty lame.
 
+=diag Page requested that wasn't recorded 
+
+A page was requested while in playback mode that was not recorded in record
+mode. A 404 object will be returned.
+
 =SEE ALSO
 LWP::UserAgent
 LWPx::Record::DataSection
+
+=for STOPWORDS
+motemen
+UserAgent
+LWP
 
 
