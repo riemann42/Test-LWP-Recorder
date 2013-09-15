@@ -41,6 +41,7 @@ sub _filter_all_params {
     ## no critic (BuiltinFunctions::ProhibitStringySplit)
     my %query = map { ( split q{=} )[ 0, 1 ] } split q{\&}, $param_string;
     ## use critic;
+    return '' unless %query;
     return reduce { $a . $self->_filter_param( $b, $query{$b} ) }
     sort keys %query;
 }
