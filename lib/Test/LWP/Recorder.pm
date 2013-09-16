@@ -44,7 +44,7 @@ sub _filter_all_params {
     return %query
         ? reduce { $a . $self->_filter_param( $b, $query{$b} ) }
     sort keys %query
-        : '';
+        : q{};
 }
 
 sub _get_cache_key {
