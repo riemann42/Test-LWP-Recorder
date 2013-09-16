@@ -41,10 +41,7 @@ sub _filter_all_params {
     ## no critic (BuiltinFunctions::ProhibitStringySplit)
     my %query = map { ( split q{=} )[ 0, 1 ] } split q{\&}, $param_string;
     ## use critic;
-    return %query
-        ? reduce { $a . $self->_filter_param( $b, $query{$b} ) }
-    sort keys %query
-        : '';
+    return %query ? reduce { $a . $self->_filter_param( $b, $query{$b} ) } sort keys %query : '';
 }
 
 sub _get_cache_key {
