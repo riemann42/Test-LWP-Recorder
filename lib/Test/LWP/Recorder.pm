@@ -29,22 +29,14 @@ sub new {
     return $self;
 }
 
-sub _filter_param {
-    my ( $self, $key, $value ) = @_;
-    my %filter = map { $_ => 1 } @{ $self->{_test_options}->{filter_params} };
-    return join q{=}, $key, $filter{$key} ? q{} : $value;
-}
-
 sub _filter_all_params {
     my $self         = shift;
     my $param_string = shift;
+    my %filter = map { $_ => 1 } @{ $self->{_test_options}{filter_params} };
     ## no critic (BuiltinFunctions::ProhibitStringySplit)
-    my %query = map { ( split q{=} )[ 0, 1 ] } split q{\&}, $param_string;
+    my %query = map { split q{=}, $_, 2 } split q{\&}, $param_string;
     ## use critic;
-    return %query
-        ? reduce { $a . $self->_filter_param( $b, $query{$b} ) }
-    sort keys %query
-        : q{};
+    return join '&', map "$_=$query{$_}", sort grep !$filter{$_}, keys %query;
 }
 
 sub _get_cache_key {
