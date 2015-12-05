@@ -18,20 +18,20 @@ use HTTP::Response;
 sub new {
     my $class    = shift;
     my %defaults = (
-        record        => 0,
-        cache_dir     => 't/LWPCache',
-        filter_params => [],
-        filter_header => [qw(Client-Peer Expires Client-Date Cache-Control)],
+        'record'        => 0,
+        'cache_dir'     => 't/LWPCache',
+        'filter_params' => [],
+        'filter_header' => [qw(Client-Peer Expires Client-Date Cache-Control)],
     );
     my $params = shift || {};
     my $self = $class->SUPER::new(@_);
-    $self->{_test_options} = { %defaults, %{$params} };
+    $self->{'_test_options'} = { %defaults, %{$params} };
     return $self;
 }
 
 sub _filter_param {
     my ( $self, $key, $value ) = @_;
-    my %filter = map { $_ => 1 } @{ $self->{_test_options}->{filter_params} };
+    my %filter = map { $_ => 1 } @{ $self->{'_test_options'}->{'filter_params'} };
     return join q{=}, $key, $filter{$key} ? q{} : $value;
 }
 
@@ -64,13 +64,13 @@ sub _get_cache_key {
         . $self->_filter_all_params($params);
 
     #warn "Key is $key";
-    return File::Spec->catfile( $self->{_test_options}->{cache_dir},
+    return File::Spec->catfile( $self->{'_test_options'}->{'cache_dir'},
         md5_hex($key) );
 }
 
 sub _filter_headers {
     my ( $self, $response ) = @_;
-    foreach ( @{ $self->{_test_options}->{filter_header} } ) {
+    foreach ( @{ $self->{'_test_options'}->{'filter_header'} } ) {
         $response->remove_header($_);
     }
     return;
@@ -82,7 +82,7 @@ sub request {
 
     my $key = $self->_get_cache_key($request);
 
-    if ( $self->{_test_options}->{record} ) {
+    if ( $self->{'_test_options'}->{'record'} ) {
         my $response = $self->SUPER::request(@original_args);
 
         my $cache_response = $response->clone;
